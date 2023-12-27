@@ -1,0 +1,17 @@
+{
+  "name": "alpha-systems",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "lerna": "^8.0.1",
+    "json-server": "^0.17.3"
+  },
+  "scripts": {
+    "start-server": "npx json-server --watch data/todo.json --port 9000 --no-cors"
+  }
+}
