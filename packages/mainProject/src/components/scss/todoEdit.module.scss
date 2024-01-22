@@ -1,14 +1,18 @@
 .edit {
-  width: 90%;
+  width: 100%;
   height: 100%;
-  margin: 0 auto;
-  //height: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: $background-table;
+  padding: 5%;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
   border-radius: 8px;
-  overflow: hidden;
+  position: absolute;
 
   &__form {
     width: 100%;

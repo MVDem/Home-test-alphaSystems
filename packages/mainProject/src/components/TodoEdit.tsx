@@ -1,18 +1,26 @@
 import { useState } from 'react';
-import { IStateUser, ITodo } from '../assets/types/types';
+import { IState, ITodo } from '../assets/types/types';
 import styles from './scss/todoEdit.module.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { editTodo } from '../assets/https/requests.ts';
+import { setTodos } from '../assets/store/todosSlice.ts';
+import React from 'react';
 
-export default function TodoEdit(props: {
+export default React.memo(function TodoEdit(props: {
   editbleTodo: ITodo;
-  setTodos: any;
-  setEditebleTodo: any;
+  setEditbleTodo: any;
 }) {
   const [title, setTitle] = useState(props.editbleTodo.title);
   const [description, setDescription] = useState(props.editbleTodo.description);
 
-  const user = useSelector((state: IStateUser) => state.user);
+  const user = useSelector((state: IState) => state.user);
+
+  const dispatch = useDispatch();
+
+  const handleSetTodos = (data: any) => {
+    dispatch(setTodos(data));
+    console.log('handleSetTodos');
+  };
 
   const handleEditTodo = () => {
     if (title.trim().length && description.trim().length) {
@@ -25,10 +33,10 @@ export default function TodoEdit(props: {
         editUser: user.name,
         editDate: Date.now(),
       };
-      editTodo(todo, props.setTodos);
+      editTodo(todo, handleSetTodos);
       setTitle('');
       setDescription('');
-      props.setEditebleTodo(undefined);
+      props.setEditbleTodo(undefined);
     }
   };
 
@@ -53,4 +61,4 @@ export default function TodoEdit(props: {
       </button>
     </div>
   );
-}
+});

@@ -1,134 +1,115 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteTodo, editTodo } from '../assets/https/requests.ts';
-import { IStateUser, ITodo } from '../assets/types/types';
+import { IState, ITodo } from '../assets/types/types';
+import { getDate } from '../assets/lib/library.ts';
 import styles from './scss/todoList.module.scss';
+import { setTodos } from '../assets/store/todosSlice.ts';
 import TodoEdit from './TodoEdit.tsx';
 import { useState } from 'react';
 
-export default function TodoList(props: { data: ITodo[]; setTodos: any }) {
-  const [editbleTodo, setEditebleTodo] = useState<ITodo | undefined>(undefined);
+export default function TodoList() {
+  const { todos } = useSelector((state: IState) => state.todos);
+  const [editbleTodo, setEditbleTodo] = useState<ITodo>();
 
-  const user = useSelector((state: IStateUser) => state.user);
+  const dispatch = useDispatch();
 
-  const getDate = (e: number) => {
-    const date = new Date(e);
-    const addLeadingZero = (e: number) => {
-      return e < 10 ? '0' + e : e;
-    };
-    const days = addLeadingZero(date.getDate());
-    const month = addLeadingZero(date.getMonth());
-    const years = addLeadingZero(date.getFullYear());
-    const hours = addLeadingZero(date.getHours());
-    const minutes = addLeadingZero(date.getMinutes());
-
-    const timeString = `${days}.${month}.${years} - ${hours}:${minutes}`;
-
-    return timeString;
+  const handleSetTodos = (data: any) => {
+    dispatch(setTodos(data));
+    console.log('handleSetTodos');
   };
 
   const handleDeleteTodo = (id: number) => {
-    const todo = props.data.find((e) => e.id === id);
+    const todo = todos.find((e) => e.id === id);
     if (todo) {
-      deleteTodo(id, props.setTodos);
+      deleteTodo(id, handleSetTodos);
     }
+    console.log('handleDeleteTodo');
   };
 
   const handleEditTodo = (e: ITodo) => {
-    setEditebleTodo(e);
+    setEditbleTodo(e);
+    console.log('handleEditTodo');
   };
 
   const handleChekedTodo = (e: ITodo) => {
     const todo: ITodo = { ...e, complited: !e.complited };
-    editTodo(todo, props.setTodos);
+    editTodo(todo, handleSetTodos);
+    console.log('handleChekedTodo');
   };
 
   return (
     <>
       <div className={styles.todoList}>
-        <div className={styles.table}>
-          <div className={styles.table__title}>
-            <div></div>
-            <p>Дата создания</p>
-            <p>Автор</p>
-            <p>Задача</p>
-            <p>Описание</p>
-            <p>Состояние</p>
-            <p>Изменения</p>
-          </div>
-          <div className={styles.table__scroll}>
-            {props.data.length ? (
-              props.data?.map((e, i) => {
+        <table className={styles.table}>
+          <thead>
+            <tr className={styles.table__title}>
+              <th></th>
+              <th>Дата создания</th>
+              <th>Автор</th>
+              <th>Задача</th>
+              <th>Описание</th>
+              <th>Состояние</th>
+              <th>Изменения</th>
+            </tr>
+          </thead>
+          <tbody>
+            {todos.length ? (
+              todos.map((e, i) => {
                 return (
-                  <div key={i} className={styles.tableContent}>
-                    {user.name ? (
+                  <tr key={i} className={styles.table__content}>
+                    <td className={styles.table__first}>
                       <button
-                        className={styles.tableContent__button}
+                        className={styles.table__checkbox}
                         onClick={() => handleChekedTodo(e)}
                       >
-                        <img
-                          src="./img/checkbox.svg"
-                          alt="checkbox"
-                          className={styles.tableContent__checkbox}
-                        />
+                        <img src="./img/checkbox.svg" alt="checkbox" />
                       </button>
-                    ) : (
-                      <div></div>
-                    )}
-                    <p className={styles.tableContent__item}>{getDate(e.id)}</p>
-                    <p className={styles.tableContent__item}>{e.author}</p>
-                    <p className={styles.tableContent__item}>{e.title}</p>
-                    <p className={styles.tableContent__item}>{e.description}</p>
-                    <p className={styles.tableContent__item}>
-                      {!e.complited ? 'Активно' : 'Выполнено'}
-                    </p>
-                    {e.editDate ? (
-                      <div>
-                        <p className={styles.tableContent__item}>
-                          {e.editUser}
-                        </p>
-                        <p className={styles.tableContent__item}>
-                          {getDate(e.editDate)}
-                        </p>
-                      </div>
-                    ) : (
-                      <p></p>
-                    )}
-                    <div>
-                      {user.name && (
-                        <>
-                          <button
-                            className={styles.tableContent__button}
-                            onClick={() => handleEditTodo(e)}
-                          >
-                            <img src="./img/edit.png" alt="edit" />
-                          </button>
-                          <button
-                            className={styles.tableContent__button}
-                            onClick={() => handleDeleteTodo(e.id)}
-                          >
-                            <img src="./img/trash.png" alt="trash" />
-                          </button>
-                        </>
+                    </td>
+                    <td>{getDate(e.id)}</td>
+                    <td>{e.author}</td>
+                    <td>{e.title}</td>
+                    <td>{e.description}</td>
+                    <td>{!e.complited ? 'Активно' : 'Выполнено'}</td>
+                    <td>
+                      {e.editDate ? (
+                        <div>
+                          <p className={styles.tableContent__item}>
+                            {e.editUser}
+                          </p>
+                          <p className={styles.tableContent__item}>
+                            {getDate(e.editDate)}
+                          </p>
+                        </div>
+                      ) : (
+                        <p> - - - </p>
                       )}
-                    </div>
-                  </div>
+                    </td>
+                    <td>
+                      <button
+                        className={styles.table__btn}
+                        onClick={() => handleEditTodo(e)}
+                      >
+                        <img src="./img/edit.png" alt="edit" />
+                      </button>
+                      <button
+                        className={styles.table__btn}
+                        onClick={() => handleDeleteTodo(e.id)}
+                      >
+                        <img src="./img/close.svg" alt="trash" />
+                      </button>
+                    </td>
+                  </tr>
                 );
               })
             ) : (
-              <div className={styles.tableContent__notodos}>
-                <p>Задач нет</p>
-              </div>
+              <tr className={styles.tableContent__notodos}>
+                <td>Задач нет</td>
+              </tr>
             )}
-          </div>
-        </div>
+          </tbody>
+        </table>
         {editbleTodo && (
-          <div className={styles.edit}>
-            <TodoEdit
-              editbleTodo={editbleTodo}
-              setTodos={props.setTodos}
-              setEditebleTodo={setEditebleTodo}
-            />
-          </div>
+          <TodoEdit editbleTodo={editbleTodo} setEditbleTodo={setEditbleTodo} />
         )}
       </div>
     </>

@@ -1,86 +1,79 @@
 .todoList {
+  width: 90%;
+  //flex-grow: 3;
+  margin: 0 auto;
+  padding: 20px 0;
+  margin-top: 20px;
+  border-radius: 8px;
+  background-color: $background-table;
+  box-sizing: border-box;
+  overflow-y: scroll;
   position: relative;
+}
+.todoList::-webkit-scrollbar {
+  display: none;
 }
 
 .table {
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
   border-radius: 8px;
-  overflow: hidden;
-  background-color: $background-table;
 
   &__title {
     height: 42px;
-    display: flex;
-    align-items: center;
-    display: grid;
-    grid-template-columns: 32px 150px 100px 200px 200px 100px 150px 75px;
     border-bottom: 1px solid #eaf0fa;
-    & > p {
+    & > th {
       padding-left: 12px;
+      text-align: left;
+      vertical-align: middle;
       @include font(14px, 14px, 400);
       color: #899cb1;
     }
   }
 
-  &__scroll {
-    width: 100%;
-    overflow: scroll;
-    &::-webkit-scrollbar {
-      width: 0;
+  &__content {
+    height: 42px;
+    border-bottom: 1px solid #eaf0fa;
+
+    & > td {
+      padding-left: 12px;
+      text-align: left;
+      vertical-align: middle;
+      @include font(14px, 14px, 400);
+      color: #899cb1;
+      text-wrap: wrap;
+    }
+
+    &:hover {
+      background-color: #eaf0fa;
+    }
+
+    &:hover .table__checkbox {
+      display: block;
     }
   }
-}
 
-.tableContent {
-  height: 42px;
-  display: flex;
-  align-items: center;
-  display: grid;
-  grid-template-columns: 32px 150px 100px 200px 200px 100px 150px 75px;
-  border-bottom: 1px solid #eaf0fa;
+  &__first {
+    min-width: 20px;
+  }
 
-  &:hover {
-    background-color: #eaf0fa;
+  &__btn,
+  &__checkbox {
+    padding: 0;
+    border: none;
+    width: 20px;
+    height: 16px;
+    background-color: inherit;
+    cursor: pointer;
+
+    & > img {
+      width: 16px;
+      height: 16px;
+    }
   }
 
   &__checkbox {
     display: none;
-    width: 16px;
-    height: 16px;
-    margin-left: 12px;
-  }
-
-  &:hover &__checkbox {
-    display: block;
-  }
-
-  &__item {
-    padding-left: 12px;
-    @include font(15px, 21px, 400);
-    color: #899cb1;
-  }
-
-  &__button {
-    border: none;
-    background-color: inherit;
-    cursor: pointer;
-    & > img {
-      width: 18px;
-      height: 18px;
-    }
-  }
-
-  &__notodos {
-    height: 42px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    & > p {
-      @include font(15px, 21px, 400);
-      color: #899cb1;
-    }
   }
 }
 

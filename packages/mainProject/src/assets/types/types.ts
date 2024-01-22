@@ -8,13 +8,18 @@ export interface ITodo {
   editDate?: number;
 }
 
+export interface IState {
+  todos: IinitialStateTodos;
+  user: IinitialStateUser;
+}
+
+export interface IinitialStateTodos {
+  todos: ITodo[] | [];
+}
+
 export interface IUser {
   name: string;
   password: string;
-}
-
-export interface IStateUser {
-  user: IinitialStateUser;
 }
 
 export interface IinitialStateUser {

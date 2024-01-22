@@ -1,14 +1,20 @@
 import { useState } from 'react';
-import { IStateUser, ITodo } from '../assets/types/types';
+import { IState, ITodo } from '../assets/types/types';
 import { createTodos } from '../assets/https/requests.ts';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTodos } from '../assets/store/todosSlice.ts';
 import styles from './scss/todoCreate.module.scss';
-import { useSelector } from 'react-redux';
 
-export default function TodoCreate(props: { setTodos: any }) {
+export default function TodoCreate() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-  const user = useSelector((state: IStateUser) => state.user);
+  const user = useSelector((state: IState) => state.user);
+
+  const dispatch = useDispatch();
+  const handleSetTodos = (data: any) => {
+    dispatch(setTodos(data));
+  };
 
   const handleAddTodo = () => {
     if (title.trim().length && description.trim().length) {
@@ -19,7 +25,7 @@ export default function TodoCreate(props: { setTodos: any }) {
         description: description,
         complited: false,
       };
-      createTodos(todo, props.setTodos);
+      createTodos(todo, handleSetTodos);
       setTitle('');
       setDescription('');
     }
